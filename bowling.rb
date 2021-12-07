@@ -1,55 +1,78 @@
+# frozen_string_literal: true
 
-=begin
-Co-authored-by: IrenehMDev <ireneh.dev_03@icloud.com>
-Co-authored-by: DiegoSteve <diegosteve123321@gmail.com>
-Co-authored-by: rene3255 <ranchoeltecal@gmail.com>
+# Co-authored-by: IrenehMDev <ireneh.dev_03@icloud.com>
+# Co-authored-by: DiegoSteve <diegosteve123321@gmail.com>
+# Co-authored-by: rene3255 <ranchoeltecal@gmail.com>
+#
+# * = Strike
+# / = Spare
 
-* = Strike
-/ = Spare 
+# Frames
+class Frame
+  def initialize(roll = nil)
+    @roll = roll
+  end
 
-| [1][4] 5|; | 
+  def first_try
+    @roll.first
+  end
 
-| 1,* : 5| ; |
-=end
+  def second_try
+    @roll.last
+  end
 
-class DisplayScore
-  
-    attr_accessor :first_ball
+  def last_frame
+    strike || chuza if @roll
+  end
 
-    def initialize(first_ball)
-        @first_ball = first_ball
-    end
+  def strike
+    first_try == 10
+  end
 
-    def shotball
-        puts "the value  #{rand(10).to_s}"
-    end    
+  def chuza
+    first_try + second_try == 10
+  end
 
-    def values
-        try1 = rand(10) 
-        puts try1
-        #x = 10 - try1
-        try2 = rand(10-try1) 
-        puts try2
-        
-    end
+  def play_rolls
+    @roll = []
+    pins_try = rand(10)
+    @roll.push(pins_try)
+    pins_try2 = rand(10 - pins_try)
+    @roll.push(pins_try2)
+    @roll
+  end
 end
 
-def score 
-  score = 0
-#if strikes
-# score = 10 + nextframe(6,4)
-#else if spare
-# score = 10 + nextframe(1)
-# if try
-#frame(x,y)
-    10.times do 
-        print "| [variable_uno][variable_dos] variable_suma|;"
-    end
-    score
+# DisplayScore display the scores
+class DisplayScore < Frame
+  attr_accessor :frames
+
+  def initialize
+    @frame = init_frame
+    # score_total = 0
+    super
+  end
+
+  def init_frame
+    @frame = Array.new(9) { Frame.new }
+  end
+
+  #   def score
+  #    10.times do
+  #       score_total = if strike(frame)
+  #                       10 + (@roll[frame + 1] + @roll[frame + 2])
+  #                     elsif chuza(frame)
+  #                       10 + @roll[frame + 1]
+  #                     else
+  #                       @roll[frame] + @roll[frame(+1)]
+  #                     end
+  #       # puts "Frame #{frame} y el score es #{score_total} "
+  #     end
+  #   end
 end
 
- lets_play = DisplayScore.new(10)
+new_frame = Frame.new
+new_frame.play_rolls
 
-# lets_play.first_ball = 1000
-# puts lets_play.first_ball
-lets_play.values
+new_game = DisplayScore.new
+new_game.score
